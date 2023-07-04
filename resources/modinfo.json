@@ -1,0 +1,12 @@
+{
+    "type": "code",
+    "side": "server", 
+    "modid": "dropclutteranyway",
+    "name": "Drop Clutter Anyway",
+    "description": "Drops clutter blocks with 100% chance",
+    "authors": ["Craluminum2413"],
+    "version": "1.0.0",
+    "dependencies": {
+        "game": "1.18.0"
+    }
+}
