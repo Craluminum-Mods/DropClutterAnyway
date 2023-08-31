@@ -5,8 +5,8 @@
     "name": "Drop Clutter Anyway",
     "description": "Drops clutter blocks with 100% chance",
     "authors": ["Craluminum2413"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "dependencies": {
-        "game": "1.18.0"
+        "game": "1.18.8"
     }
 }
