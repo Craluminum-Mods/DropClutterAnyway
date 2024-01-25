@@ -17,7 +17,10 @@ public class Core : ModSystem
     {
         harmony = new Harmony(Mod.Info.ModID);
 
-        harmony.Patch(original: typeof(BlockClutter).GetMethod("GetDrops"), prefix: typeof(BlockClutterDropPatch).GetMethod("Prefix"));
+        MethodInfo prefix = typeof(BlockClutterDropPatch).GetMethod("Prefix");
+        
+        harmony.Patch(original: typeof(BlockClutter).GetMethod("GetDrops"), prefix: prefix);
+        harmony.Patch(original: typeof(BlockShapeFromAttributes).GetMethod("GetDrops"), prefix: prefix);
     }
 
     public override void Dispose()
@@ -28,11 +31,14 @@ public class Core : ModSystem
     [HarmonyPatch(typeof(BlockClutter), nameof(BlockClutter.GetDrops))]
     public static class BlockClutterDropPatch
     {
-        public static bool Prefix(BlockClutter __instance, BlockPos pos)
+        public static bool Prefix(BlockClutter __instance, ref ItemStack[] __result, IWorldAccessor world, BlockPos pos)
         {
             BEBehaviorShapeFromAttributes bec = __instance.GetBEBehavior<BEBehaviorShapeFromAttributes>(pos);
             bec.Collected = true;
-            return true;
+            ItemStack itemStack = __instance.OnPickBlock(world, pos);
+            itemStack.Attributes.SetBool("collected", true);
+            __result = new[] { itemStack };
+            return false;
         }
     }
 }
