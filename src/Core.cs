@@ -1,3 +1,4 @@
+using System.Reflection;
 using HarmonyLib;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -10,24 +11,18 @@ namespace DropClutterAnyway;
 
 public class Core : ModSystem
 {
-    public const string HarmonyID = "craluminum2413.dropclutteranyway";
-
-    public override void Start(ICoreAPI api)
-    {
-        base.Start(api);
-        api.RegisterBlockBehaviorClass("DropClutterAnyway:GuaranteedDrop", typeof(BlockBehaviorGuaranteedDrop));
-    }
+    private Harmony harmony;
 
     public override void StartServerSide(ICoreServerAPI api)
     {
-        base.StartServerSide(api);
-        new Harmony(HarmonyID).Patch(original: typeof(BlockClutter).GetMethod("GetDrops"), prefix: typeof(BlockClutterDropPatch).GetMethod("Prefix"));
+        harmony = new Harmony(Mod.Info.ModID);
+
+        harmony.Patch(original: typeof(BlockClutter).GetMethod("GetDrops"), prefix: typeof(BlockClutterDropPatch).GetMethod("Prefix"));
     }
 
     public override void Dispose()
     {
-        new Harmony(HarmonyID).Unpatch(original: typeof(BlockClutter).GetMethod("GetDrops"), HarmonyPatchType.All, HarmonyID);
-        base.Dispose();
+        harmony?.UnpatchAll(Mod.Info.ModID);
     }
 
     [HarmonyPatch(typeof(BlockClutter), nameof(BlockClutter.GetDrops))]
