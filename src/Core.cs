@@ -18,7 +18,7 @@ public class Core : ModSystem
         harmony = new Harmony(Mod.Info.ModID);
 
         MethodInfo prefix = typeof(BlockClutterDropPatch).GetMethod("Prefix");
-        
+
         harmony.Patch(original: typeof(BlockClutter).GetMethod("GetDrops"), prefix: prefix);
         harmony.Patch(original: typeof(BlockShapeFromAttributes).GetMethod("GetDrops"), prefix: prefix);
     }
